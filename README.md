@@ -12,13 +12,16 @@ pnpm install zod-subset-parser
 
 ## Usage
 
+The parser is designed to be robust and handles standard JavaScript syntax, including comments and extra whitespace.
+
 ```ts
 import { parseZodString } from "zod-subset-parser";
 
 const schema = parseZodString(`
+  // Define a user schema
   z.object({
-    name: z.string().min(1),
-    age: z.number().optional(),
+    name: z.string().min(1), // User's full name
+    age: z.number().optional(), /* User's age */
     tags: z.array(z.string())
   })
 `);

@@ -180,4 +180,17 @@ describe('parseZodString', () => {
     expect(schema.safeParse(['a', 'b']).success).toBe(true);
     expect(schema.safeParse(['a', 'b', 'c']).success).toBe(false);
   });
+
+  it('should handle comments and extra whitespace', () => {
+    const schemaString = `
+      // This is a test object
+      z.object({
+        name: z.string(), // User's name
+        age: z.number().int() /* User's age */,
+      })
+    `;
+    const schema = parseZodString(schemaString);
+    expect(schema.safeParse({ name: 'test', age: 30 }).success).toBe(true);
+    expect(schema.safeParse({ name: 'test', age: 30.5 }).success).toBe(false);
+  });
 });
