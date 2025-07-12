@@ -43,6 +43,7 @@ You can generate Zod schemas as strings using the following constructs.
 #### For any type
 - `.optional()`
 - `.nullable()`
+- `.describe("...")`
 
 ## Unsupported Features (Do Not Use)
 

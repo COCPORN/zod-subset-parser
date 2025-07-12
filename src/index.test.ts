@@ -166,4 +166,10 @@ describe('parseZodString', () => {
   it('should throw an error for unsupported object property types', () => {
     expect(() => parseZodString('z.object({ name: 123 })')).toThrow();
   });
+
+  it('should parse a z.string() with .describe()', () => {
+    const description = 'This is a test description.';
+    const schema = parseZodString(`z.string().describe("${description}")`);
+    expect(schema.description).toBe(description);
+  });
 });
