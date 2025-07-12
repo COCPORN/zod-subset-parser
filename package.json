@@ -1,6 +1,6 @@
 {
   "name": "zod-subset-parser",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "Safely parse Zod schema definitions from strings without using eval.",
   "exports": {
     ".": {
