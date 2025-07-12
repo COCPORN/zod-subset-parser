@@ -1,6 +1,6 @@
 import { z, ZodTypeAny } from 'zod';
 import * as acorn from 'acorn';
-import { Expression, CallExpression, Identifier, MemberExpression, Literal, ArrayExpression, ObjectExpression, Property } from 'estree';
+import { Expression, CallExpression, Identifier, MemberExpression, Literal, ArrayExpression, ObjectExpression, Property } from 'acorn';
 
 export class ZodParseError extends Error {
   constructor(message: string) {
@@ -27,8 +27,8 @@ function parseNode(node: Expression): ZodTypeAny {
 
     // Base case: z.string(), z.number(), etc.
     if (object.type === 'Identifier' && object.name === 'z') {
-      const methodName = property.name;
-      const args = node.arguments.map(arg => parseArg(arg as Expression));
+      const methodName = property.name as keyof typeof z;
+      const args = node.arguments.map((arg) => parseArg(arg as Expression));
 
       switch (methodName) {
         case 'string':
@@ -39,12 +39,12 @@ function parseNode(node: Expression): ZodTypeAny {
           if (args.length > 0) {
             throw new ZodParseError(`z.${methodName}() does not take any arguments`);
           }
-          return z[methodName]();
+          return (z[methodName] as () => ZodTypeAny)();
         case 'literal':
           return z.literal(args[0]);
         case 'enum':
           const enumValues = args[0] as any[];
-          if (enumValues.some(v => typeof v !== 'string')) {
+          if (enumValues.some((v) => typeof v !== 'string')) {
             throw new ZodParseError('z.enum() only supports an array of strings');
           }
           return z.enum(enumValues as [string, ...string[]]);
@@ -65,7 +65,7 @@ function parseNode(node: Expression): ZodTypeAny {
     if (object.type === 'CallExpression') {
       const schema = parseNode(object);
       const methodName = property.name;
-      const args = node.arguments.map(arg => parseArg(arg as Expression));
+      const args = node.arguments.map((arg) => parseArg(arg as Expression));
 
       if (typeof (schema as any)[methodName] !== 'function') {
         throw new ZodParseError(`Unsupported method: ${methodName}`);
@@ -88,7 +88,7 @@ function parseArg(arg: Expression): any {
     return (arg as Literal).value;
   }
   if (arg.type === 'ArrayExpression') {
-    return (arg as ArrayExpression).elements.map(el => parseArg(el as Expression));
+    return (arg as ArrayExpression).elements.map((el) => parseArg(el as Expression));
   }
   if (arg.type === 'CallExpression') {
     return parseNode(arg);

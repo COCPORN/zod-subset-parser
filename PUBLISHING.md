@@ -12,7 +12,7 @@ This guide provides the basic steps to publish this package to the npm registry.
 Before you can publish, you need to authenticate with your npm account from your terminal.
 
 ```bash
-npm login
+pnpm login
 ```
 
 Follow the prompts to enter your username, password, and email address.
