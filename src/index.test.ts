@@ -193,4 +193,19 @@ describe('parseZodString', () => {
     expect(schema.safeParse({ name: 'test', age: 30 }).success).toBe(true);
     expect(schema.safeParse({ name: 'test', age: 30.5 }).success).toBe(false);
   });
+
+  it('should report correct line and column for a syntax error', () => {
+    const schemaString = `
+      z.object({
+        name: z.string(),
+        age: z.number(),
+        @
+      })
+    `;
+    // The exact error message from acorn can vary, so we'll use a regex
+    // to confirm the line and column are present and correct.
+    expect(() => parseZodString(schemaString)).toThrow(
+      /Invalid JavaScript at line 5, column 8/
+    );
+  });
 });
