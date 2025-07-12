@@ -35,7 +35,7 @@ schema.parse({ name: "Alice", tags: ["foo"] }); // ✅ Valid
 - `z.enum([...])`
 - `z.null()`, `z.undefined()`
 - `.optional()`, `.nullable()`, `.describe("...")`
-- `z.array(...)`
+- `z.array(...)` with `.min()`, `.max()`, `.length()`, `.nonempty()`
 - `z.object({ ... })` with nested support
 - `z.union([ ... ])`
 - `z.tuple([ ... ])`

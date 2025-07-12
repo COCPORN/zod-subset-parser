@@ -25,6 +25,12 @@ You can generate Zod schemas as strings using the following constructs.
 
 ### Chained Methods
 
+#### For `z.array()`
+- `.min(number)`
+- `.max(number)`
+- `.length(number)`
+- `.nonempty()`
+
 #### For `z.string()`
 - `.min(number)`
 - `.max(number)`

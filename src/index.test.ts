@@ -172,4 +172,12 @@ describe('parseZodString', () => {
     const schema = parseZodString(`z.string().describe("${description}")`);
     expect(schema.description).toBe(description);
   });
+
+  it('should parse array length constraints', () => {
+    const schema = parseZodString('z.array(z.string()).min(1).max(2)');
+    expect(schema.safeParse([]).success).toBe(false);
+    expect(schema.safeParse(['a']).success).toBe(true);
+    expect(schema.safeParse(['a', 'b']).success).toBe(true);
+    expect(schema.safeParse(['a', 'b', 'c']).success).toBe(false);
+  });
 });
