@@ -11,9 +11,6 @@ importers:
       acorn:
         specifier: ^8.15.0
         version: 8.15.0
-      zod:
-        specifier: ^4.0.5
-        version: 4.0.5
     devDependencies:
       '@types/acorn':
         specifier: ^6.0.4
@@ -39,6 +36,12 @@ importers:
       vitest:
         specifier: ^3.2.4
         version: 3.2.4(@types/node@24.0.13)(@vitest/ui@3.2.4)
+      zod:
+        specifier: ^4.0.5
+        version: 4.0.5
+      zod3:
+        specifier: npm:zod@3
+        version: zod@3.25.76
 
 packages:
 
@@ -1093,6 +1096,9 @@ packages:
     resolution: {integrity: sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q==}
     engines: {node: '>=10'}
 
+  zod@3.25.76:
+    resolution: {integrity: sha512-gzUt/qt81nXsFGKIFcC3YnfEAx5NkunCfnDlvuBSSFS02bcXu4Lmea0AFIUwbLWxWPx3d9p8S5QoaujKcNQxcQ==}
+
   zod@4.0.5:
     resolution: {integrity: sha512-/5UuuRPStvHXu7RS+gmvRf4NXrNxpSllGwDnCBcJZtQsKrviYXm54yDGV2KYNLT5kq0lHGcl7lqWJLgSaG+tgA==}
 
@@ -2061,5 +2067,7 @@ snapshots:
       yargs-parser: 20.2.9
 
   yocto-queue@0.1.0: {}
+
+  zod@3.25.76: {}
 
   zod@4.0.5: {}

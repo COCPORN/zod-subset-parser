@@ -3,20 +3,24 @@
   "version": "0.1.1",
   "description": "Safely parse Zod schema definitions from strings without using eval.",
   "exports": {
-    ".": {
-      "import": "./dist/index.mjs",
-      "require": "./dist/index.js"
+    "./zod3": {
+      "import": "./dist/zod3/index.mjs",
+      "require": "./dist/zod3/index.js"
+    },
+    "./zod4": {
+      "import": "./dist/zod4/index.mjs",
+      "require": "./dist/zod4/index.js"
     }
   },
-  "main": "./dist/index.js",
-  "module": "./dist/index.mjs",
-  "types": "./dist/index.d.ts",
+  "main": "./dist/zod4/index.js",
+  "module": "./dist/zod4/index.mjs",
+  "types": "./dist/zod4/index.d.ts",
   "files": [
     "dist"
   ],
   "scripts": {
-    "build": "tsup src/index.ts --format esm,cjs --dts",
-    "dev": "tsup src/index.ts --format esm,cjs --dts --watch",
+    "build": "tsup --config tsup.config.ts",
+    "dev": "tsup --config tsup.config.ts --watch",
     "test": "vitest",
     "test:ui": "vitest --ui",
     "test:coverage": "vitest run --coverage"
@@ -33,8 +37,10 @@
   "license": "ISC",
   "packageManager": "pnpm@10.12.4",
   "dependencies": {
-    "acorn": "^8.15.0",
-    "zod": "^4.0.5"
+    "acorn": "^8.15.0"
+  },
+  "peerDependencies": {
+    "zod": ">=3.0.0"
   },
   "repository": {
     "type": "git",
@@ -48,6 +54,8 @@
     "@vitest/ui": "^3.2.4",
     "tsup": "^8.5.0",
     "typescript": "^5.8.3",
-    "vitest": "^3.2.4"
+    "vitest": "^3.2.4",
+    "zod": "^4.0.5",
+    "zod3": "npm:zod@3"
   }
 }
