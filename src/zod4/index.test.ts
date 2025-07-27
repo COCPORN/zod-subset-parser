@@ -208,4 +208,67 @@ describe('parseZodString', () => {
       /Invalid JavaScript at line 5, column 8/
     );
   });
+
+  it('should handle empty string input', () => {
+    expect(() => parseZodString('')).toThrow();
+  });
+
+  it('should parse .default() with literal values', () => {
+    // Test string default
+    const stringSchema = parseZodString('z.string().default("hello")');
+    expect(stringSchema.parse(undefined)).toBe('hello');
+    expect(stringSchema.parse('world')).toBe('world');
+    
+    // Test number default
+    const numberSchema = parseZodString('z.number().default(42)');
+    expect(numberSchema.parse(undefined)).toBe(42);
+    expect(numberSchema.parse(100)).toBe(100);
+    
+    // Test boolean default
+    const booleanSchema = parseZodString('z.boolean().default(true)');
+    expect(booleanSchema.parse(undefined)).toBe(true);
+    expect(booleanSchema.parse(false)).toBe(false);
+    
+    // Test null default
+    const nullSchema = parseZodString('z.string().nullable().default(null)');
+    expect(nullSchema.parse(undefined)).toBe(null);
+    expect(nullSchema.parse('test')).toBe('test');
+  });
+
+  it('should parse complex object schema with descriptions and optional fields', () => {
+    const complexSchemaString = `z.object({
+      path: z.string().describe('File path to read (relative to current working directory)'),
+      encoding: z.enum(['utf8', 'binary', 'base64']).optional().describe('File encoding (default: utf8)'),
+      startLine: z.number().optional().describe('Start line for partial reading (1-based)'),
+      endLine: z.number().optional().describe('End line for partial reading (1-based)'),
+      maxBytes: z.number().optional().describe('Maximum bytes to read')
+    })`;
+    
+    const schema = parseZodString(complexSchemaString);
+    
+    // Test valid input
+    expect(schema.safeParse({
+      path: '/test/file.txt',
+      encoding: 'utf8',
+      startLine: 1,
+      endLine: 10,
+      maxBytes: 1024
+    }).success).toBe(true);
+    
+    // Test minimal valid input (only required field)
+    expect(schema.safeParse({
+      path: '/test/file.txt'
+    }).success).toBe(true);
+    
+    // Test invalid encoding
+    expect(schema.safeParse({
+      path: '/test/file.txt',
+      encoding: 'invalid'
+    }).success).toBe(false);
+    
+    // Test missing required field
+    expect(schema.safeParse({
+      encoding: 'utf8'
+    }).success).toBe(false);
+  });
 });
