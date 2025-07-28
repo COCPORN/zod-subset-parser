@@ -145,8 +145,15 @@ describe('parseZodString', () => {
     expect(() => parseZodString('z.string() + z.number()')).toThrow();
   });
 
-  it('should throw an error for unsupported types', () => {
-    expect(() => parseZodString('z.any()')).toThrow();
+  it('should parse a z.any()', () => {
+    const schema = parseZodString('z.any()');
+    expect(schema.safeParse('string').success).toBe(true);
+    expect(schema.safeParse(123).success).toBe(true);
+    expect(schema.safeParse(true).success).toBe(true);
+    expect(schema.safeParse(null).success).toBe(true);
+    expect(schema.safeParse(undefined).success).toBe(true);
+    expect(schema.safeParse({ foo: 'bar' }).success).toBe(true);
+    expect(schema.safeParse([1, 2, 3]).success).toBe(true);
   });
 
   it('should throw an error for unsupported arguments', () => {
@@ -227,6 +234,62 @@ describe('parseZodString', () => {
     const nullSchema = parseZodString('z.string().nullable().default(null)');
     expect(nullSchema.parse(undefined)).toBe(null);
     expect(nullSchema.parse('test')).toBe('test');
+  });
+
+  it('should parse z.record() with value type only', () => {
+    const schema = parseZodString('z.record(z.string())');
+    
+    // Test valid data
+    expect(schema.safeParse({ key1: 'value1', key2: 'value2' }).success).toBe(true);
+    
+    // Test invalid data (wrong value type)
+    expect(schema.safeParse({ key1: 'value1', key2: 123 }).success).toBe(false);
+    
+    // Test empty object
+    expect(schema.safeParse({}).success).toBe(true);
+  });
+
+  it('should parse z.record() with key and value types', () => {
+    const schema = parseZodString('z.record(z.string(), z.number())');
+    
+    // Test valid data
+    expect(schema.safeParse({ name: 123, age: 456 }).success).toBe(true);
+    
+    // Test invalid data (wrong value type)
+    expect(schema.safeParse({ name: 'invalid' }).success).toBe(false);
+    
+    // Test empty object
+    expect(schema.safeParse({}).success).toBe(true);
+  });
+
+  it('should parse z.record() with complex nested types', () => {
+    const schema = parseZodString('z.record(z.object({ name: z.string(), count: z.number() }))'); 
+    
+    // Test valid nested data
+    expect(schema.safeParse({
+      item1: { name: 'test1', count: 5 },
+      item2: { name: 'test2', count: 10 }
+    }).success).toBe(true);
+    
+    // Test invalid nested data
+    expect(schema.safeParse({
+      item1: { name: 'test1', count: 'invalid' }
+    }).success).toBe(false);
+  });
+
+  it('should parse z.record() with chained methods', () => {
+    const schema = parseZodString('z.record(z.string()).optional()');
+    
+    // Test undefined (should be valid due to optional)
+    expect(schema.safeParse(undefined).success).toBe(true);
+    
+    // Test valid record
+    expect(schema.safeParse({ key: 'value' }).success).toBe(true);
+  });
+
+  it('should throw error for z.record() with invalid argument count', () => {
+    expect(() => parseZodString('z.record()')).toThrow('z.record() requires 1 or 2 arguments');
+    expect(() => parseZodString('z.record(z.string(), z.number(), z.boolean())')).toThrow('z.record() requires 1 or 2 arguments');
   });
 
   it('should parse complex object schema with descriptions and optional fields', () => {

@@ -36,6 +36,7 @@ function parseNode(node: Expression): ZodTypeAny {
         case 'boolean':
         case 'null':
         case 'undefined':
+        case 'any':
           if (args.length > 0) {
             throw new ZodParseError(`z.${methodName}() does not take any arguments`);
           }
@@ -59,6 +60,13 @@ function parseNode(node: Expression): ZodTypeAny {
           return z.union(args[0] as [ZodTypeAny, ZodTypeAny, ...ZodTypeAny[]]);
         case 'tuple':
           return z.tuple(args[0] as [ZodTypeAny, ...ZodTypeAny[]]);
+        case 'record':
+          if (args.length === 1) {
+            return z.record(args[0] as ZodTypeAny);
+          } else if (args.length === 2) {
+            return z.record(args[0] as ZodTypeAny, args[1] as ZodTypeAny);
+          }
+          throw new ZodParseError('z.record() requires 1 or 2 arguments');
         default:
           throw new ZodParseError(`Unsupported Zod base type: ${methodName}`);
       }

@@ -79,6 +79,13 @@ function parseNode(node) {
           return import_zod.z.union(args[0]);
         case "tuple":
           return import_zod.z.tuple(args[0]);
+        case "record":
+          if (args.length === 1) {
+            return import_zod.z.record(import_zod.z.string(), args[0]);
+          } else if (args.length === 2) {
+            return import_zod.z.record(args[0], args[1]);
+          }
+          throw new ZodParseError("z.record() requires 1 or 2 arguments");
         default:
           throw new ZodParseError(`Unsupported Zod base type: ${methodName}`);
       }
