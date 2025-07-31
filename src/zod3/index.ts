@@ -37,6 +37,7 @@ function parseNode(node: Expression): ZodTypeAny {
         case 'null':
         case 'undefined':
         case 'any':
+        case 'date':
           if (args.length > 0) {
             throw new ZodParseError(`z.${methodName}() does not take any arguments`);
           }

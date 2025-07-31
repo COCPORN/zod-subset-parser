@@ -13,9 +13,17 @@ describe('parseZodString', () => {
     expect(schema).toBeInstanceOf(z.ZodNumber);
   });
 
-  it('should parse a simple z.boolean()', () => {
+  it('should parse a z.boolean()', () => {
     const schema = parseZodString('z.boolean()');
     expect(schema).toBeInstanceOf(z.ZodBoolean);
+  });
+
+  it('should parse a z.date()', () => {
+    const schema = parseZodString('z.date()');
+    expect(schema).toBeInstanceOf(z.ZodDate);
+    expect(schema.safeParse(new Date()).success).toBe(true);
+    expect(schema.safeParse('not-a-date').success).toBe(false);
+    expect(schema.safeParse(123).success).toBe(false);
   });
 
   it('should parse a z.string().min(5)', () => {

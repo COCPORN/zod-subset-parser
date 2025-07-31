@@ -18,6 +18,14 @@ describe('parseZodString', () => {
     expect(schema).toBeInstanceOf(z.ZodBoolean);
   });
 
+  it('should parse a z.date()', () => {
+    const schema = parseZodString('z.date()');
+    expect(schema).toBeInstanceOf(z.ZodDate);
+    expect(schema.safeParse(new Date()).success).toBe(true);
+    expect(schema.safeParse('not-a-date').success).toBe(false);
+    expect(schema.safeParse(123).success).toBe(false);
+  });
+
   it('should parse a z.string().min(5)', () => {
     const schema = parseZodString('z.string().min(5)');
     expect(schema.safeParse('1234').success).toBe(false);
