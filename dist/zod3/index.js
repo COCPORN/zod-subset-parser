@@ -4098,11 +4098,16 @@ function parseNode(node) {
       switch (methodName) {
         case "string":
         case "number":
+        case "bigint":
         case "boolean":
+        case "date":
+        case "symbol":
         case "null":
         case "undefined":
+        case "void":
         case "any":
-        case "date":
+        case "unknown":
+        case "never":
           if (args.length > 0) {
             throw new ZodParseError(`z.${methodName}() does not take any arguments`);
           }

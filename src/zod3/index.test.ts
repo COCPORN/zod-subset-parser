@@ -26,6 +26,42 @@ describe('parseZodString', () => {
     expect(schema.safeParse(123).success).toBe(false);
   });
 
+  it('should parse a z.bigint()', () => {
+    const schema = parseZodString('z.bigint()');
+    expect(schema).toBeInstanceOf(z.ZodBigInt);
+    expect(schema.safeParse(BigInt(123)).success).toBe(true);
+    expect(schema.safeParse(123).success).toBe(false);
+  });
+
+  it('should parse a z.symbol()', () => {
+    const schema = parseZodString('z.symbol()');
+    expect(schema).toBeInstanceOf(z.ZodSymbol);
+    expect(schema.safeParse(Symbol('test')).success).toBe(true);
+    expect(schema.safeParse('symbol').success).toBe(false);
+  });
+
+  it('should parse a z.void()', () => {
+    const schema = parseZodString('z.void()');
+    expect(schema).toBeInstanceOf(z.ZodVoid);
+    expect(schema.safeParse(undefined).success).toBe(true);
+    expect(schema.safeParse(null).success).toBe(false);
+  });
+
+  it('should parse a z.unknown()', () => {
+    const schema = parseZodString('z.unknown()');
+    expect(schema).toBeInstanceOf(z.ZodUnknown);
+    expect(schema.safeParse('anything').success).toBe(true);
+    expect(schema.safeParse(123).success).toBe(true);
+    expect(schema.safeParse(null).success).toBe(true);
+  });
+
+  it('should parse a z.never()', () => {
+    const schema = parseZodString('z.never()');
+    expect(schema).toBeInstanceOf(z.ZodNever);
+    expect(schema.safeParse('anything').success).toBe(false);
+    expect(schema.safeParse(undefined).success).toBe(false);
+  });
+
   it('should parse a z.string().min(5)', () => {
     const schema = parseZodString('z.string().min(5)');
     expect(schema.safeParse('1234').success).toBe(false);

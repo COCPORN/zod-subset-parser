@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.3.0] - 2025-07-31
+
+### Added
+- **z.date()** support - Parse and validate Date objects
+- **z.bigint()** support - Parse and validate BigInt values
+- **z.symbol()** support - Parse and validate Symbol values
+- **z.void()** support - Parse and validate undefined (alias for z.undefined())
+- **z.unknown()** support - Type-safe alternative to z.any()
+- **z.never()** support - Type that accepts no values
+- Comprehensive test coverage for all new primitive types
+
+### Fixed
+- Resolves "Unsupported Zod base type: date" error when parsing schemas with z.date()
+
+### Notes
+- All Zod primitive types are now supported
+- Maintains compatibility with both Zod v3 and v4
+
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
